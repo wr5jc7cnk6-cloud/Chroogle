@@ -1,72 +1,59 @@
-import 'package:flutter/material.dart';
-import 'package:webview_flutter/webview_flutter.dart';
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chroogle</title>
 
-void main() {
-  runApp(const ChroogleApp());
+<style>
+body {
+  font-family: sans-serif;
+  text-align: center;
+  margin-top: 100px;
 }
 
-class ChroogleApp extends StatelessWidget {
-  const ChroogleApp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: BrowserScreen(),
-    );
-  }
+h1 {
+  font-size: 32px;
 }
 
-class BrowserScreen extends StatefulWidget {
-  const BrowserScreen({super.key});
-
-  @override
-  State<BrowserScreen> createState() => _BrowserScreenState();
+input {
+  width: 80%;
+  padding: 12px;
+  font-size: 18px;
 }
 
-class _BrowserScreenState extends State<BrowserScreen> {
-  final controller = WebViewController();
-  final urlController = TextEditingController(text: "https://google.com");
+button {
+  padding: 12px 20px;
+  font-size: 18px;
+  margin-top: 10px;
+}
+</style>
+</head>
 
-  @override
-  void initState() {
-    super.initState();
-    controller.loadRequest(Uri.parse(urlController.text));
-  }
+<body>
 
-  void go() {
-    String input = urlController.text;
+<h1>Chroogle</h1>
 
-    if (!input.contains(".")) {
-      input =
-          "https://www.google.com/search?q=${Uri.encodeComponent(input)}";
-    } else if (!input.startsWith("http")) {
-      input = "https://$input";
+<input id="search" placeholder="検索またはURL入力">
+<br>
+<button onclick="go()">検索</button>
+
+<script>
+function go() {
+  let input = document.getElementById("search").value;
+
+  if (!input.includes(".")) {
+    window.location.href =
+      "https://www.google.com/search?q=" +
+      encodeURIComponent(input);
+  } else {
+    if (!input.startsWith("http")) {
+      input = "https://" + input;
     }
-
-    controller.loadRequest(Uri.parse(input));
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: TextField(
-          controller: urlController,
-          decoration: const InputDecoration(
-            hintText: "検索またはURL入力",
-            border: InputBorder.none,
-          ),
-          onSubmitted: (_) => go(),
-        ),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.refresh),
-            onPressed: () => controller.reload(),
-          ),
-        ],
-      ),
-      body: WebViewWidget(controller: controller),
-    );
+    window.location.href = input;
   }
 }
+</script>
+
+</body>
+</html>
