@@ -1,12 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 
-void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
+void main() {
   runApp(const ChroogleApp());
 }
 
@@ -30,37 +25,26 @@ class BrowserScreen extends StatefulWidget {
 }
 
 class _BrowserScreenState extends State<BrowserScreen> {
-  final WebViewController _controller = WebViewController();
-  final TextEditingController _urlController =
-      TextEditingController(text: "https://google.com");
+  final controller = WebViewController();
+  final urlController = TextEditingController(text: "https://google.com");
 
   @override
   void initState() {
     super.initState();
-    _controller.loadRequest(Uri.parse(_urlController.text));
+    controller.loadRequest(Uri.parse(urlController.text));
   }
 
-  void _loadUrl() {
-    String url = _urlController.text;
-    if (!url.startsWith("http")) {
-      url = "https://$url";
+  void go() {
+    String input = urlController.text;
+
+    if (!input.contains(".")) {
+      input =
+          "https://www.google.com/search?q=${Uri.encodeComponent(input)}";
+    } else if (!input.startsWith("http")) {
+      input = "https://$input";
     }
-    _controller.loadRequest(Uri.parse(url));
-  }
 
-  Future<void> _loginWithGoogle() async {
-    final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
-    if (googleUser == null) return; // キャンセルした場合
-
-    final GoogleSignInAuthentication googleAuth =
-        await googleUser.authentication;
-
-    final credential = GoogleAuthProvider.credential(
-      accessToken: googleAuth.accessToken,
-      idToken: googleAuth.idToken,
-    );
-
-    await FirebaseAuth.instance.signInWithCredential(credential);
+    controller.loadRequest(Uri.parse(input));
   }
 
   @override
@@ -68,33 +52,21 @@ class _BrowserScreenState extends State<BrowserScreen> {
     return Scaffold(
       appBar: AppBar(
         title: TextField(
-          controller: _urlController,
+          controller: urlController,
           decoration: const InputDecoration(
-            hintText: "アドレスを入力",
+            hintText: "検索またはURL入力",
             border: InputBorder.none,
           ),
-          onSubmitted: (_) => _loadUrl(),
+          onSubmitted: (_) => go(),
         ),
         actions: [
           IconButton(
-            icon: const Icon(Icons.arrow_back),
-            onPressed: () => _controller.goBack(),
-          ),
-          IconButton(
-            icon: const Icon(Icons.arrow_forward),
-            onPressed: () => _controller.goForward(),
-          ),
-          IconButton(
             icon: const Icon(Icons.refresh),
-            onPressed: () => _controller.reload(),
-          ),
-          IconButton(
-            icon: const Icon(Icons.login),
-            onPressed: _loginWithGoogle,
+            onPressed: () => controller.reload(),
           ),
         ],
       ),
-      body: WebViewWidget(controller: _controller),
+      body: WebViewWidget(controller: controller),
     );
   }
 }
