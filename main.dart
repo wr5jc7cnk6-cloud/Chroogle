@@ -9,23 +9,30 @@
 body {
   font-family: sans-serif;
   text-align: center;
-  margin-top: 100px;
+  margin-top: 120px;
 }
 
 h1 {
-  font-size: 32px;
+  font-size: 36px;
+  margin-bottom: 20px;
 }
 
 input {
   width: 80%;
-  padding: 12px;
+  padding: 14px;
   font-size: 18px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
 }
 
 button {
   padding: 12px 20px;
   font-size: 18px;
-  margin-top: 10px;
+  margin-top: 12px;
+  border-radius: 8px;
+  border: none;
+  background: black;
+  color: white;
 }
 </style>
 </head>
