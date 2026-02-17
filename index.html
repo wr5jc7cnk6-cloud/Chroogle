@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>Chroogle</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      text-align: center;
+      margin-top: 100px;
+      background: #fff;
+    }
+
+    h1 {
+      font-size: 40px;
+      margin-bottom: 20px;
+    }
+
+    input {
+      width: 80%;
+      padding: 12px;
+      font-size: 18px;
+      border-radius: 25px;
+      border: 1px solid #ccc;
+      outline: none;
+    }
+
+    button {
+      margin-top: 15px;
+      padding: 10px 20px;
+      font-size: 16px;
+      border-radius: 20px;
+      border: none;
+      background: #4285f4;
+      color: white;
+    }
+  </style>
+</head>
+
+<body>
+
+<h1>Chroogle</h1>
+
+<input id="search" placeholder="検索またはURL入力">
+
+<br>
+<button onclick="go()">検索</button>
+
+<script>
+function go() {
+  const input = document.getElementById("search").value;
+
+  // 裏番号
+  if (input === "*#info#") {
+    window.location.href = "hidden.html";
+    return;
+  }
+
+  // URLか検索か判定
+  if (input.startsWith("http")) {
+    window.location.href = input;
+  } else {
+    window.location.href =
+      "https://www.google.com/search?q=" + encodeURIComponent(input);
+  }
+}
+</script>
+
+</body>
+</html>
